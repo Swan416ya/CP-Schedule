@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cp_schedule/Pages/about.dart';
 
 class homePage extends StatefulWidget {
   @override
@@ -83,7 +84,7 @@ class _homePageState extends State<homePage> {
                   key: _About,
                   onGenerateRoute: (RouteSettings settings) {
                     return MaterialPageRoute(
-                      builder: (context) => Text('About'),
+                      builder: (context) => aboutPage(),
                     );
                   },
                 ),
