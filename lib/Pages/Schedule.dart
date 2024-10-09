@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cp_schedule/https/apiGetter.dart';
 import 'package:cp_schedule/Parts/ContestCard.dart'; // Ensure this path is correct
+import 'package:flutter/material.dart';
 
 class SchedulePage extends StatefulWidget {
   @override
@@ -8,22 +9,35 @@ class SchedulePage extends StatefulWidget {
 }
 
 class _SchedulePageState extends State<SchedulePage> {
-  var ApiGetter = new apiGetter("codeforces.com");
-  List ret = [];
-  late Future fetchContestFuture;
+  late apiGetter api;
+  List<Contest> contests = [];
+  String selectedResource = 'codeforces.com';
 
   @override
   void initState() {
     super.initState();
-    fetchContestFuture = fetchContestData();
+    api = apiGetter(selectedResource);
+    fetchContests();
   }
 
-  Future fetchContestData() async {
-    var data = await ApiGetter.getContestCardList();
-    setState(() {
-      ret = data;
-    });
-    return data;
+  Future<void> fetchContests() async {
+    try {
+      List<Map<String, dynamic>> contestData = await api.fetchContests();
+      setState(() {
+        contests = contestData
+            .map((data) => Contest(
+                  resource: data['resource'],
+                  startTime: data['startTime'],
+                  endTime: data['endTime'],
+                  event: data['event'],
+                  duration: data['duration'],
+                  href: data['href'],
+                ))
+            .toList();
+      });
+    } catch (e) {
+      print('Error fetching contests: $e');
+    }
   }
 
   @override
@@ -39,9 +53,10 @@ class _SchedulePageState extends State<SchedulePage> {
             child: DropdownButtonFormField<String>(
               decoration: InputDecoration(
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30.0),
+                  borderRadius: BorderRadius.circular(50.0),
                 ),
               ),
+              value: selectedResource,
               items: ['codeforces.com', 'atcoder.jp', 'ac.nowcoder.com']
                   .map((String resource) {
                 return DropdownMenuItem<String>(
@@ -51,38 +66,19 @@ class _SchedulePageState extends State<SchedulePage> {
               }).toList(),
               onChanged: (String? newValue) {
                 setState(() {
-                  // Update the resource and refresh the page
-                  ApiGetter = new apiGetter(newValue!);
-                  // Fetch new data and update the contest card list
-                  fetchContestFuture = fetchContestData();
+                  selectedResource = newValue!;
+                  api = apiGetter(selectedResource);
+                  fetchContests();
                 });
               },
               hint: Text('Select Resource'),
             ),
           ),
           Expanded(
-            child: FutureBuilder(
-              future: fetchContestFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else {
-                  return ListView.builder(
-                    itemCount: ret.length,
-                    itemBuilder: (context, index) {
-                      return ContestCard(
-                        ret[index]['resource']['name'],
-                        ret[index]['start'],
-                        ret[index]['end'],
-                        ret[index]['event'],
-                        ret[index]['duration'].toString(),
-                        ret[index]['href'],
-                      );
-                    },
-                  );
-                }
+            child: ListView.builder(
+              itemCount: contests.length,
+              itemBuilder: (context, index) {
+                return ContestCard(contests[index]);
               },
             ),
           ),

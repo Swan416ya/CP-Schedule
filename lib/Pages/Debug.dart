@@ -13,14 +13,22 @@ class _DebugPageState extends State<DebugPage> {
   void initState() {
     super.initState();
     Contest tmp = Contest(
-      resource: "codeforces.com",
-      startTime: DateTime.parse("2022-01-01T00:00:00"),
-      endTime: DateTime.parse("2022-01-01T00:00:00"),
-      event: "Codeforces Round #745 (Div. 2)",
-      duration: 7200,
-      href: "https://codeforces.com/contests/1560",
+      resource: 'codeforces.com',
+      startTime: '2021-09-01T00:00:00Z',
+      endTime: '2021-09-02T00:00:00Z',
+      event: 'Codeforces Round #123',
+      duration: '7200',
+      href: 'https://codeforces.com/contests/123',
     );
     ret.add(tmp);
+    tmp = Contest(
+      resource: 'atcoder.jp',
+      startTime: '2021-09-01T00:00:00Z',
+      endTime: '2021-09-02T00:00:00Z',
+      event: 'AtCoder Beginner Contest 123',
+      duration: '7200',
+      href: 'https://atcoder.jp/contests/abc123',
+    );
     ret.add(tmp);
   }
 
@@ -33,61 +41,8 @@ class _DebugPageState extends State<DebugPage> {
       body: ListView.builder(
         itemCount: ret.length,
         itemBuilder: (context, index) {
-          return ContestCard(
-            ret[index].resource,
-            ret[index].startTime,
-            ret[index].endTime,
-            ret[index].event,
-            ret[index].duration.toString(),
-            ret[index].href,
-          );
+          return ContestCard(ret[index]);
         },
-      ),
-    );
-  }
-}
-
-class Contest {
-  final String resource;
-  final DateTime startTime;
-  final DateTime endTime;
-  final String event;
-  final int duration;
-  final String href;
-
-  Contest({
-    required this.resource,
-    required this.startTime,
-    required this.endTime,
-    required this.event,
-    required this.duration,
-    required this.href,
-  });
-}
-
-class ContestCard extends StatelessWidget {
-  final String resource;
-  final DateTime startTime;
-  final DateTime endTime;
-  final String event;
-  final String duration;
-  final String href;
-
-  ContestCard(this.resource, this.startTime, this.endTime, this.event,
-      this.duration, this.href);
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Column(
-        children: [
-          Text('Resource: $resource'),
-          Text('Event: $event'),
-          Text('Start Time: $startTime'),
-          Text('End Time: $endTime'),
-          Text('Duration: $duration'),
-          Text('URL: $href'),
-        ],
       ),
     );
   }

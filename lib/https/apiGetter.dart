@@ -4,102 +4,47 @@ import 'package:intl/intl.dart';
 import 'package:cp_schedule/Parts/ContestCard.dart';
 
 class apiGetter {
-  String resourse = "";
-  //获取本地时间
-  String getLocalTime() {
-    var now = new DateTime.now();
-    int year = now.year;
-    int month = now.month;
-    int day = now.day;
-    int hour = now.hour;
-    int minute = now.minute;
-    int second = now.second;
-    String ret = year.toString() +
-        "-" +
-        month.toString() +
-        "-" +
-        day.toString() +
-        "T" +
-        hour.toString() +
-        '%3A' +
-        minute.toString() +
-        '%3A' +
-        second.toString();
-    return ret;
-  }
+  final String resource;
 
-  apiGetter(String resourse) {
-    this.resourse = resourse;
-    this.url = "https://clist.by:443/api/v4/contest/?resource=" +
-        resourse +
-        "&start__gt=" +
-        getLocalTime() +
-        "&order_by=start";
-  }
-  late String url;
+  apiGetter(this.resource);
 
-  String getUrl() {
-    return url;
-  }
+  Future<List<Map<String, dynamic>>> fetchContests() async {
+    // 获取当前本地时间并格式化为 ISO 8601 字符串
+    DateTime now = DateTime.now();
+    String currentTime = formatDateTime(now);
 
-  List allContests = [];
-  int contestsCount = 0;
-  Future<void> getContests() async {
-    var response = await http.get(Uri.parse(url));//获取数据
-    var jsonData = jsonDecode(response.body);//解析数据
-    //解析的格式为
-    // {
-    //   "meta": {
-    //     "limit": 20,
-    //     "offset": 0,
-    //     "total_count": 1
-    //   },
-    //   "objects": [
-    //     {
-    //       "duration": 7200,
-    //       "end": "2022-01-01T00:00:00",
-    //       "event": "Codeforces Round #745 (Div. 2)",
-    //       "href": "https://codeforces.com/contests/1560",
-    //       "id": 1560,
-    //       "resource": {
-    //         "id": 1,
-    //         "name": "Codeforces.com"
-    //       },
-    //       "start": "2021-12-31T22:35:00",
-    //       "title": "Codeforces Round #745 (Div. 2)",
-    //       "durationSeconds": 7200,
-    //       "endSeconds": 1640995200,
-    //       "startSeconds": 1640988900
-    //     }
-    //   ]
-    // }
-    allContests = jsonData['objects'];
-    contestsCount = jsonData['meta']['total_count'];
-  }
+    // 构建请求 URL
+    String url =
+        'https://clist.by/api/v4/contest/?resource=$resource&start__gt=$currentTime&order_by=start';
 
-  List getContest(int index) {
-    return allContests[index];
-  }
+    // 发送 HTTP GET 请求
+    final response = await http.get(Uri.parse(url));
 
-  String getContestName(int index) {
-    return allContests[index]['event'];
-  }
-
-  contest getContestCard(int index) {
-    return new contest(
-        allContests[index]['resource']['name'],
-        allContests[index]['start'],
-        allContests[index]['end'],
-        allContests[index]['event'],
-        allContests[index]['duration'].toString(),
-        allContests[index]['href']);
-  }
-
-  List getContestCardList() {
-    List ret = [];
-    for (int i = 0; i < contestsCount; i++) {
-      ret.add(getContestCard(i));
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      List contests = jsonData['objects'];
+      return contests
+          .map((contest) => {
+                'resource': contest['resource']['name'],
+                'startTime': DateTime.parse(contest['start']).toString(),
+                'endTime': DateTime.parse(contest['end']).toString(),
+                'event': contest['event'],
+                'duration': contest['duration'].toString(),
+                'href': contest['href'],
+              })
+          .toList();
+    } else {
+      throw Exception('Failed to load contests');
     }
-    return ret;
+  }
+
+  String formatDateTime(DateTime dateTime) {
+    String year = dateTime.year.toString();
+    String month = dateTime.month.toString().padLeft(2, '0');
+    String day = dateTime.day.toString().padLeft(2, '0');
+    String hour = dateTime.hour.toString().padLeft(2, '0');
+    String minute = dateTime.minute.toString().padLeft(2, '0');
+    String second = dateTime.second.toString().padLeft(2, '0');
+    return '$year-$month-$day'+'T$hour:$minute:$second';
   }
 }
