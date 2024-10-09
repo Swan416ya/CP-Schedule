@@ -3,123 +3,111 @@ import 'package:cp_schedule/https/apiGetter.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'dart:io';
+import 'package:url_launcher/url_launcher.dart';
 
+class contest
+{
+  String resourse = "";
+  String startTime = "";
+  String endTime = "";
+  String event = "";
+  int duration = 0;
+  String href = "";
+  String resourceLogo = "";
+
+  contest(String resourse,String orgStartTime,String orgEndTime,String event,String orgDuration,String href){
+    this.resourse = resourse;
+    //将orgStartTime和orgEndTime里面的T和Z变成空格
+    this.startTime = orgStartTime.replaceAll("T", " ").replaceAll("Z", "");
+    this.endTime = orgEndTime.replaceAll("T", " ").replaceAll("Z", "");
+    this.event = event;
+    this.duration = int.parse(orgDuration);
+    this.href = href;
+    //根据resourse来选择对应的logo
+    switch(resourse)
+    {
+      case "codeforces.com":
+        this.resourceLogo = "assets/img/logo/Codeforces.png";
+        break;
+    }
+  }
+}
+
+//先写contestCard和_ContestCardState作为单个比赛的展示卡片，然后再写一个contestCardList作为比赛列表展示所有比赛卡片
 class ContestCard extends StatefulWidget {
-  final String resource;
-  final int index;
-
-  ContestCard(this.resource, this.index);
+  contest _contest = new contest("","","","","","");
+  ContestCard(String resourse,String orgStartTime,String orgEndTime,String event,String orgDuration,String href){
+    _contest = new contest(resourse,orgStartTime,orgEndTime,event,orgDuration,href);
+  }
 
   @override
   _ContestCardState createState() => _ContestCardState();
 }
 
 class _ContestCardState extends State<ContestCard> {
-  String resource = "";
-  DateTime startTime = DateTime.now();
-  DateTime endTime = DateTime.now();
-  String name = "";
-  String url = "";
-  Duration timeLength = Duration();
-  Image logo = Image.asset('assets/img/logo/Codeforces.png');
-
-  @override
-  void initState() {
-    super.initState();
-    resource = widget.resource;
-    apiGetter getter = apiGetter(resource);
-    getter.getContest().then((value) {
-      setState(() {
-        name = value[widget.index]['event'];
-        startTime = DateTime.parse(value[widget.index]['start']);
-        endTime = DateTime.parse(value[widget.index]['end']);
-        timeLength = endTime.difference(startTime);
-        url = value[widget.index]['href'];
-      });
-    });
-    switch (resource) {
-      case "codeforces.com":
-        logo = Image.asset('assets/img/logo/Codeforces.png');
-        break;
-      case "atcoder.jp":
-        logo = Image.asset('assets/img/logo/Atcoder.png');
-        break;
-    }
-  }
-
-  void writeContestInfoToJson(Map<String, dynamic> contestInfo) {
-    final contestInfoJson = jsonEncode(contestInfo);
-    final file = File('assets/matchlist/subscribedMatches.json');
-    file.writeAsString(contestInfoJson);
-  }
-
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        final contestInfo = {
-          'name': name,
-          'startTime': startTime.toIso8601String(),
-          'endTime': endTime.toIso8601String(),
-          'timeLength': timeLength.inMinutes,
-          'resource': resource,
-          'url': url,
-        };
-        writeContestInfoToJson(contestInfo);
-      },
-      child: Card(
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SizedBox(
-                child: logo,
-                height: 50,
-              ),
-            ),
-            ListTile(
-              title: Text(
-                name,
-                style: TextStyle(fontWeight: FontWeight.w500),
-              ),
-              subtitle: Text("Start Time: " + DateFormat('yyyy-MM-dd kk:mm').format(startTime)),
-            ),
-            ListTile(
-              title: Text("End Time: " + DateFormat('yyyy-MM-dd kk:mm').format(endTime)),
-              subtitle: Text("Time Length: " + timeLength.inHours.toString() + "h " + (timeLength.inMinutes % 60).toString() + "m"),
-            ),
-            ListTile(
-              title: Text("Resource: " + resource),
-              subtitle: Text(
-                "URL: " + url,
-                style: TextStyle(color: Colors.blue),
-              ),
-            ),
-          ],
-        ),
+    return Card(
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Image.asset(widget._contest.resourceLogo),
+              Text(
+                widget._contest.resourse,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+                ),
+            ],
+          ),
+          Row(
+            children: [
+              Text(widget._contest.startTime),
+              Text(widget._contest.endTime),
+            ],
+          ),
+          Text(widget._contest.event),
+          Text(widget._contest.duration.toString()),
+          TextButton(
+            onPressed: () {
+              //跳转到比赛页面
+              launch(widget._contest.href);
+            },
+            child: Text("Go to Contest"),
+          ),
+        ],
       ),
     );
   }
 }
 
+class ContestCardList extends StatefulWidget {
+  List<contest> _contestList = [];
+  ContestCardList(List<contest> contestList){
+    _contestList = contestList;
+  }
 
-class Contest
-{
-  String name;
-  DateTime startTime;
-  DateTime endTime;
-  Duration timeLength;
-  String url;
-  String resource;
-  Image logo;
+  @override
+  _ContestCardListState createState() => _ContestCardListState();
+}
 
-  Contest({
-    required this.name,
-    required this.startTime,
-    required this.endTime,
-    required this.timeLength,
-    required this.url,
-    required this.resource,
-    required this.logo,
-  });
+class _ContestCardListState extends State<ContestCardList> {
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: widget._contestList.length,
+      itemBuilder: (context, index) {
+        return ContestCard(
+          widget._contestList[index].resourse,
+          widget._contestList[index].startTime,
+          widget._contestList[index].endTime,
+          widget._contestList[index].event,
+          widget._contestList[index].duration.toString(),
+          widget._contestList[index].href,
+        );
+      },
+    );
+  }
 }

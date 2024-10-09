@@ -2,73 +2,91 @@ import 'package:flutter/material.dart';
 import 'package:cp_schedule/https/apiGetter.dart';
 import 'package:cp_schedule/Parts/ContestCard.dart'; // Ensure this path is correct
 
-class schedulePage extends StatefulWidget {
+class SchedulePage extends StatefulWidget {
   @override
-  _schedulePage createState() => _schedulePage();
+  _SchedulePageState createState() => _SchedulePageState();
 }
 
-class _schedulePage extends State<schedulePage> {
-  String Resource = "codeforces.com";
-  List<Contest> contests = []; // Define the contests variable
+class _SchedulePageState extends State<SchedulePage> {
+  var ApiGetter = new apiGetter("codeforces.com");
+  List ret = [];
+  late Future fetchContestFuture;
 
   @override
   void initState() {
     super.initState();
-    // Initialize contests with some data
-    fetchContests();
+    fetchContestFuture = fetchContestData();
   }
 
-  void fetchContests() async {
-    // Fetch contests from API or any other source
-    // For example:
-    apiGetter getter = new apiGetter(Resource);
-    List<Contest> fetchedContests = (await getter.getContests(Resource)).cast<Contest>();
-    setState(() {});
+  Future fetchContestData() async {
+    var data = await ApiGetter.getContestCardList();
+    setState(() {
+      ret = data;
+    });
+    return data;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Schedule'),
+        title: Text('Schedule Page'),
       ),
-      body: ListView.builder(
-        itemCount: contests.length + 1,
-        itemBuilder: (BuildContext context, int index) {
-            if (index == 0) {
-            return ListTile(
-              title: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
-                border: Border.all(color: Colors.grey),
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 12),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                value: Resource,
-                onChanged: (String? newValue) {
-                  setState(() {
-                  Resource = newValue!;
-                  fetchContests(); // Fetch contests again when resource changes
-                  });
-                },
-                items: <String>['codeforces.com', 'atcoder.jp']
-                  .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                  );
-                }).toList(),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: DropdownButtonFormField<String>(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30.0),
                 ),
               ),
-              ),
-            );
-            } else {
-            //列举所有比赛卡
-            return ContestCard(Resource, index - 1);
-          }
-        },
+              items: ['codeforces.com', 'atcoder.jp', 'ac.nowcoder.com']
+                  .map((String resource) {
+                return DropdownMenuItem<String>(
+                  value: resource,
+                  child: Text(resource),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                setState(() {
+                  // Update the resource and refresh the page
+                  ApiGetter = new apiGetter(newValue!);
+                  // Fetch new data and update the contest card list
+                  fetchContestFuture = fetchContestData();
+                });
+              },
+              hint: Text('Select Resource'),
+            ),
+          ),
+          Expanded(
+            child: FutureBuilder(
+              future: fetchContestFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else {
+                  return ListView.builder(
+                    itemCount: ret.length,
+                    itemBuilder: (context, index) {
+                      return ContestCard(
+                        ret[index]['resource']['name'],
+                        ret[index]['start'],
+                        ret[index]['end'],
+                        ret[index]['event'],
+                        ret[index]['duration'].toString(),
+                        ret[index]['href'],
+                      );
+                    },
+                  );
+                }
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

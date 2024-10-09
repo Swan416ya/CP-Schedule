@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cp_schedule/Pages/about.dart';
-import 'package:cp_schedule/Pages/schedule.dart';
+import 'package:cp_schedule/Pages/Schedule.dart';
 import 'package:cp_schedule/Parts/ContestCard.dart';
+import 'package:cp_schedule/Pages/Debug.dart';
 
 class homePage extends StatefulWidget {
   @override
@@ -76,7 +77,7 @@ class _homePageState extends State<homePage> {
                   key: _Schedule,
                   onGenerateRoute: (RouteSettings settings) {
                     return MaterialPageRoute(
-                      builder: (context) => schedulePage(),
+                      builder: (context) => SchedulePage(),
                     );
                   },
                 ),
@@ -100,7 +101,7 @@ class _homePageState extends State<homePage> {
                   key: _Debug,
                   onGenerateRoute: (RouteSettings settings) {
                     return MaterialPageRoute(
-                      builder: (context) => ContestCard('codeforces.com', 0),
+                      builder: (context) => DebugPage(),
                     );
                   },
                 )
