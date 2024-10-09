@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cp_schedule/Pages/about.dart';
+import 'package:cp_schedule/Pages/schedule.dart';
+import 'package:cp_schedule/Parts/ContestCard.dart';
 
 class homePage extends StatefulWidget {
   @override
@@ -13,6 +15,7 @@ class _homePageState extends State<homePage> {
   final _Schedule = GlobalKey<NavigatorState>();
   final _Settings = GlobalKey<NavigatorState>();
   final _About = GlobalKey<NavigatorState>();
+  final _Debug = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +52,11 @@ class _homePageState extends State<homePage> {
                 selectedIcon: Icon(Icons.info),
                 label: Text('About'),
               ),
+              NavigationRailDestination(
+                icon: Icon(Icons.bug_report),
+                selectedIcon: Icon(Icons.bug_report),
+                label: Text('Debug'),
+              ),
             ],
           ),
           //主体部分
@@ -68,7 +76,7 @@ class _homePageState extends State<homePage> {
                   key: _Schedule,
                   onGenerateRoute: (RouteSettings settings) {
                     return MaterialPageRoute(
-                      builder: (context) => Text('Schedule'),
+                      builder: (context) => schedulePage(),
                     );
                   },
                 ),
@@ -88,6 +96,14 @@ class _homePageState extends State<homePage> {
                     );
                   },
                 ),
+                Navigator(
+                  key: _Debug,
+                  onGenerateRoute: (RouteSettings settings) {
+                    return MaterialPageRoute(
+                      builder: (context) => ContestCard('codeforces.com', 0),
+                    );
+                  },
+                )
               ],
             ),
           ),
