@@ -3,6 +3,7 @@ import 'package:cp_schedule/Pages/about.dart';
 import 'package:cp_schedule/Pages/Schedule.dart';
 import 'package:cp_schedule/Parts/ContestCard.dart';
 import 'package:cp_schedule/Pages/Debug.dart';
+import 'package:cp_schedule/Pages/Setting.dart';
 
 class homePage extends StatefulWidget {
   @override
@@ -87,7 +88,7 @@ class _homePageState extends State<homePage> {
                   key: _Settings,
                   onGenerateRoute: (RouteSettings settings) {
                     return MaterialPageRoute(
-                      builder: (context) => Text('Settings'),
+                      builder: (context) => settingPage(),
                     );
                   },
                 ),
