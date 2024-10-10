@@ -32,6 +32,8 @@ class _homePageState extends State<homePage> {
               });
             },
             labelType: NavigationRailLabelType.all,
+            //背景色是249,240,245
+            backgroundColor: Color.fromARGB(255, 249, 240, 245),
             destinations: <NavigationRailDestination>[
               NavigationRailDestination(
                 icon: Icon(Icons.calendar_today),

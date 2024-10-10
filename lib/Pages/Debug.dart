@@ -30,6 +30,15 @@ class _DebugPageState extends State<DebugPage> {
       href: 'https://atcoder.jp/contests/abc123',
     );
     ret.add(tmp);
+    tmp = Contest(
+      resource: 'ac.nowcoder.com',
+      startTime: '2021-09-01T00:00:00Z',
+      endTime: '2021-09-02T00:00:00Z',
+      event: '牛客网月赛 123',
+      duration: '7200',
+      href: 'https://ac.nowcoder.com/contest/123',
+    );
+    ret.add(tmp);
   }
 
   @override

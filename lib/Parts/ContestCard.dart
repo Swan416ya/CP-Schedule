@@ -30,55 +30,113 @@ class ContestCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return GestureDetector(
+      onTap: () async {
+      final url = contest.href;
+      if (await canLaunch(url)) {
+        await launch(url);
+      } else {
+        throw 'Could not launch $url';
+      }
+      },
+      child: Card(
       margin: EdgeInsets.all(10.0),
       child: Padding(
         padding: EdgeInsets.all(10.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 第一行：显示 logo 和 resource
+          Row(
           children: [
-            // 第一行：显示 logo
-            Row(
-              children: [
-                Image.asset(
-                  getLogoPath(contest.resource),
-                  width: 50,
-                  height: 50,
-                ),
-                SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    contest.event,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
+            Image.asset(
+            getLogoPath(contest.resource),
+            width: 30,
+            height: 30,
             ),
-            SizedBox(height: 10),
-            // 第二行：显示开始时间和结束时间
-            Text(
-              '开始时间: ${contest.startTime}',
-              style: TextStyle(fontSize: 16),
+            SizedBox(width: 10),
+            Expanded(
+            child: Text(
+              contest.event,
+              style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              ),
             ),
-            Text(
-              '结束时间: ${contest.endTime}',
-              style: TextStyle(fontSize: 16),
             ),
-            SizedBox(height: 10),
-            // 第三行：显示时长和资源
-            Text(
-              '时长: ${formatDuration(contest.duration)}',
-              style: TextStyle(fontSize: 16),
+            GestureDetector(
+            onTap: () async {
+              final url = "https://"+contest.resource;
+              if (await canLaunch(url)) {
+              await launch(url);
+              } else {
+              throw 'Could not launch $url';
+              }
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+              color: Color.fromARGB(255, 244, 219, 241),
+              borderRadius: BorderRadius.circular(14),
+              ),
+              child: Text(
+              contest.resource,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+              ),
             ),
-            Text(
-              '资源: ${contest.resource}',
-              style: TextStyle(fontSize: 16),
             ),
           ],
+          ),
+          SizedBox(height: 10),
+          // 第二行：显示开始时间和结束时间
+          RichText(
+          text: TextSpan(
+            children: [
+            TextSpan(
+              text: 'StartTime: ',
+              style: TextStyle(
+              color: Color.fromARGB(255, 123, 78, 127),
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              ),
+            ),
+            TextSpan(
+              text: '${contest.startTime.replaceAll('T', ' ').replaceAll('Z', ' ')}\t\t\t\t',
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+            TextSpan(
+              text: 'EndTime: ',
+              style: TextStyle(
+              color: Color.fromARGB(255, 123, 78, 127),
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              ),
+            ),
+            TextSpan(
+              text: '${contest.endTime.replaceAll('T', ' ').replaceAll('Z', ' ')}\t\t\t\t',
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+            TextSpan(
+              text: 'Duration: ',
+              style: TextStyle(
+              color: Color.fromARGB(255, 123, 78, 127),
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              ),
+            ),
+            TextSpan(
+              text: '${formatDuration(contest.duration)}',
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+            ],
+          ),
+          ),
+        ],
         ),
+      ),
       ),
     );
   }
@@ -100,6 +158,6 @@ class ContestCard extends StatelessWidget {
     int totalMinutes = int.parse(duration) ~/ 60;
     int hours = totalMinutes ~/ 60;
     int minutes = totalMinutes % 60;
-    return '${hours}小时${minutes}分钟';
+    return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}';
   }
 }

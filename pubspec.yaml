@@ -56,6 +56,16 @@ dev_dependencies:
 
   json_annotation: ^4.0.1
 
+  dio: ^4.0.0
+
+  dio_cookie_manager: ^2.0.0
+
+  shared_preferences: ^2.0.6
+
+  provider: ^5.0.0
+
+  path_provider: ^2.0.11
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -75,6 +85,8 @@ flutter:
   assets:
     - assets/img/logo/Codeforces.png
     - assets/img/logo/Atcoder.png
+    - assets/img/logo/NowCoder.png
+    - save/CListCookie.txt
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
