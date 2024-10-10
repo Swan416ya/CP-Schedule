@@ -1,8 +1,7 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:cookie_jar/cookie_jar.dart';
 
 class WebHelper {
   static late final Dio dio;
@@ -18,8 +17,7 @@ class WebHelper {
       sendTimeout: const Duration(seconds: 30).inMilliseconds,
     );
     dio = Dio(options);
-    dio.transformer = BackgroundTransformer();
-    var cookiePath = '${AppStorage().dataPath}/cookies';
+    var cookiePath = 'cp_schedule/cookies/';
     cookieManager =
         CookieManager(PersistCookieJar(storage: FileStorage(cookiePath)));
     dio.interceptors.add(cookieManager);
@@ -67,5 +65,30 @@ class WebHelper {
   void cancel({required CancelToken token}) {
     _cancelToken.cancel("cancelled");
     _cancelToken = token;
+  }
+}
+
+class apiGetter{
+  String resource = 'codeforces.com';
+  apiGetter({required this.resource});
+
+  static final WebHelper api = WebHelper();
+  Future<List<Map<String, dynamic>>> fetchContests() async {
+    var response = await api.get('https://clist.by/api/v2/contest/', queryParameters: {
+      'resource__name': resource,
+      'start__gt': DateTime.now().toIso8601String(),
+      'order_by': 'start',
+    });
+    List<dynamic> contests = response.data['objects'];
+    return contests.map((contest) {
+      return {
+        'resource': contest['resource']['name'],
+        'startTime': contest['start'],
+        'endTime': contest['end'],
+        'event': contest['event'],
+        'duration': contest['duration'],
+        'href': contest['href'],
+      };
+    }).toList();
   }
 }
