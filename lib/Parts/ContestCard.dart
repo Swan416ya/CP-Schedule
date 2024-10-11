@@ -26,19 +26,11 @@ class Contest {
 class ContestCard extends StatelessWidget {
   final Contest contest;
 
-  ContestCard(this.contest);
+  ContestCard({required this.contest});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () async {
-      final url = contest.href;
-      if (await canLaunch(url)) {
-        await launch(url);
-      } else {
-        throw 'Could not launch $url';
-      }
-      },
       child: Card(
       margin: EdgeInsets.all(10.0),
       child: Padding(
@@ -64,26 +56,29 @@ class ContestCard extends StatelessWidget {
               ),
             ),
             ),
-            GestureDetector(
-            onTap: () async {
+            MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onTap: () async {
               final url = "https://"+contest.resource;
               if (await canLaunch(url)) {
-              await launch(url);
+                await launch(url);
               } else {
-              throw 'Could not launch $url';
+                throw 'Could not launch $url';
               }
-            },
-            child: Container(
+              },
+              child: Container(
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-              color: Color.fromARGB(255, 244, 219, 241),
-              borderRadius: BorderRadius.circular(14),
+                color: Color.fromARGB(255, 244, 219, 241),
+                borderRadius: BorderRadius.circular(14),
               ),
               child: Text(
-              contest.resource,
-              style: TextStyle(
+                contest.resource,
+                style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
+                ),
               ),
               ),
             ),
@@ -149,6 +144,14 @@ class ContestCard extends StatelessWidget {
         return 'assets/img/logo/AtCoder.png';
       case 'ac.nowcoder.com':
         return 'assets/img/logo/NowCoder.png';
+      case 'leetcode.com':
+        return 'assets/img/logo/LeetCode.png';
+      case 'luogu.com.cn':
+        return 'assets/img/logo/Luogu.png';
+      case 'vjudge.net':
+        return 'assets/img/logo/vjudge.png';
+      case 'CodeChef.com':
+        return 'assets/img/logo/CodeChef.png';
       default:
         return 'assets/img/logo/default.png';
     }

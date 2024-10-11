@@ -66,6 +66,8 @@ dev_dependencies:
 
   path_provider: ^2.0.11
 
+  unicons: ^2.0.0
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -86,7 +88,11 @@ flutter:
     - assets/img/logo/Codeforces.png
     - assets/img/logo/Atcoder.png
     - assets/img/logo/NowCoder.png
-    - save/CListCookie.txt
+    - assets/img/logo/LeetCode.png
+    - assets/img/logo/default.png
+    - assets/img/logo/CodeChef.png
+    - assets/img/logo/luogu.png
+    - assets/img/logo/vjudge.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

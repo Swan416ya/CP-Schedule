@@ -2,36 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:cp_schedule/Pages/about.dart';
 import 'dart:io';
 import 'package:cp_schedule/https/apiGetter.dart';
+import 'package:cp_schedule/https/WebHelper.dart';
+import 'package:http/http.dart' as http;
 
-class settingPage extends StatefulWidget
-{
+class settingPage extends StatefulWidget {
   @override
   _settingPageState createState() => _settingPageState();
 }
 
-class _settingPageState extends State<settingPage>
-{
+class _settingPageState extends State<settingPage> {
   final TextEditingController _controller = TextEditingController();
+
   @override
-  Widget build(BuildContext context)
-  {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Setting'),
+        title: Text('Settings'),
       ),
-      body: ListView(
+      body: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            child: Text(
-              'Account',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ),
-          ),
           ListTile(
             leading: const Icon(Icons.cookie_outlined),
             title: const Text('Clist sessionid'),
@@ -62,6 +51,9 @@ class _settingPageState extends State<settingPage>
                                   [Cookie('sessionid', value)]);
                           if (!context.mounted) return;
                           Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Session ID saved successfully')),
+                          );
                         },
                       ),
                     ),
@@ -80,6 +72,9 @@ class _settingPageState extends State<settingPage>
                                   [Cookie('sessionid', value)]);
                           if (!context.mounted) return;
                           Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Session ID saved successfully')),
+                          );
                         },
                         child: const Text('OK'),
                       ),
@@ -91,7 +86,7 @@ class _settingPageState extends State<settingPage>
             ),
           ),
         ],
-      )
+      ),
     );
   }
 }

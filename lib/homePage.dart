@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:cp_schedule/Pages/about.dart';
 import 'package:cp_schedule/Pages/Schedule.dart';
 import 'package:cp_schedule/Parts/ContestCard.dart';
-import 'package:cp_schedule/Pages/Debug.dart';
+import 'package:cp_schedule/Pages/ShowCard.dart';
 import 'package:cp_schedule/Pages/Setting.dart';
+import 'package:unicons/unicons.dart';
 
 class homePage extends StatefulWidget {
   @override
@@ -17,7 +18,7 @@ class _homePageState extends State<homePage> {
   final _Schedule = GlobalKey<NavigatorState>();
   final _Settings = GlobalKey<NavigatorState>();
   final _About = GlobalKey<NavigatorState>();
-  final _Debug = GlobalKey<NavigatorState>();
+  final _ShowCard = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
@@ -57,9 +58,9 @@ class _homePageState extends State<homePage> {
                 label: Text('About'),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.bug_report),
-                selectedIcon: Icon(Icons.bug_report),
-                label: Text('Debug'),
+                icon: Icon(UniconsLine.card_atm),
+                selectedIcon: Icon(UniconsLine.card_atm),
+                label: Text('Card'),
               ),
             ],
           ),
@@ -101,10 +102,10 @@ class _homePageState extends State<homePage> {
                   },
                 ),
                 Navigator(
-                  key: _Debug,
+                  key: _ShowCard,
                   onGenerateRoute: (RouteSettings settings) {
                     return MaterialPageRoute(
-                      builder: (context) => DebugPage(),
+                      builder: (context) => ShowCardPage(),
                     );
                   },
                 )

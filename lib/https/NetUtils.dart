@@ -1,11 +1,9 @@
+import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:dio/dio.dart';
-import 'package:dio_cookie_manager/dio_cookie_manager.dart';
-import 'package:cookie_jar/cookie_jar.dart';
 
-class apiGetter {
+class NetUtils {
   static void get(String url, Function callback,
-      {Map<String, String> params = const {}, required Function errorCallback}) async {
+      {Map<String, String>? params, Function? errorCallback}) async {
     if (params != null && params.isNotEmpty) {
       StringBuffer sb = new StringBuffer("?");
       params.forEach((key, value) {
@@ -15,14 +13,11 @@ class apiGetter {
       paramStr = paramStr.substring(0, paramStr.length - 1);
       url += paramStr;
     }
-    print("$url");
+//    print("$url");
     try {
-      Dio dio = new Dio();
-      var cookieJar = CookieJar();
-      dio.interceptors.add(CookieManager(cookieJar));
-      Response res = await dio.get(url);
+      http.Response res = await http.get(Uri.parse(url));
       if (callback != null) {
-        callback(res.data);
+        callback(res.body);
       }
     } catch (exception) {
       if (errorCallback != null) {
@@ -32,14 +27,11 @@ class apiGetter {
   }
 
   static void post(String url, Function callback,
-      {Map<String, String> params = const {}, required Function errorCallback}) async {
+      {Map<String, String>? params, Function? errorCallback}) async {
     try {
-      Dio dio = new Dio();
-      var cookieJar = CookieJar();
-      dio.interceptors.add(CookieManager(cookieJar));
-      Response res = await dio.post(url, data: params);
+      http.Response res = await http.post(Uri.parse(url), body: params);
       if (callback != null) {
-        callback(res.data);
+        callback(res.body);
       }
     } catch (e) {
       if (errorCallback != null) {
