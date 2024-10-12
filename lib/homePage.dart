@@ -6,6 +6,8 @@ import 'package:cp_schedule/Pages/ShowCard.dart';
 import 'package:cp_schedule/Pages/Setting.dart';
 import 'package:unicons/unicons.dart';
 import 'package:cp_schedule/Pages/ShowJson.dart';
+import 'package:cp_schedule/Pages/calendarPage.dart';
+import 'package:cp_schedule/Pages/exampleCalendarPage.dart';
 
 class homePage extends StatefulWidget {
   @override
@@ -19,8 +21,9 @@ class _homePageState extends State<homePage> {
   final _Schedule = GlobalKey<NavigatorState>();
   final _Settings = GlobalKey<NavigatorState>();
   final _About = GlobalKey<NavigatorState>();
-  final _ShowCard = GlobalKey<NavigatorState>();
-  final _ShowJson = GlobalKey<NavigatorState>();
+  // final _ShowCard = GlobalKey<NavigatorState>();
+  // final _ShowJson = GlobalKey<NavigatorState>();
+  final _ExpTable = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
@@ -59,15 +62,20 @@ class _homePageState extends State<homePage> {
                 selectedIcon: Icon(Icons.info),
                 label: Text('About'),
               ),
+              // NavigationRailDestination(
+              //   icon: Icon(UniconsLine.card_atm),
+              //   selectedIcon: Icon(UniconsLine.card_atm),
+              //   label: Text('Card'),
+              // ),
+              // NavigationRailDestination(
+              //   icon: Icon(Icons.web),
+              //   selectedIcon: Icon(Icons.web),
+              //   label: Text('Json'),
+              // ),
               NavigationRailDestination(
-                icon: Icon(UniconsLine.card_atm),
-                selectedIcon: Icon(UniconsLine.card_atm),
-                label: Text('Card'),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.web),
-                selectedIcon: Icon(Icons.web),
-                label: Text('Json'),
+                icon: Icon(Icons.table_chart),
+                selectedIcon: Icon(Icons.table_chart),
+                label: Text('ExpTable'),
               ),
             ],
           ),
@@ -80,7 +88,7 @@ class _homePageState extends State<homePage> {
                   key: _Calendar,
                   onGenerateRoute: (RouteSettings settings) {
                     return MaterialPageRoute(
-                      builder: (context) => Text('Calendar'),
+                      builder: (context) => CalendarPage(),
                     );
                   },
                 ),
@@ -108,19 +116,27 @@ class _homePageState extends State<homePage> {
                     );
                   },
                 ),
+                // Navigator(
+                //   key: _ShowCard,
+                //   onGenerateRoute: (RouteSettings settings) {
+                //     return MaterialPageRoute(
+                //       builder: (context) => ShowCardPage(),
+                //     );
+                //   },
+                // ),
+                // Navigator(
+                //   key: _ShowJson,
+                //   onGenerateRoute: (RouteSettings settings) {
+                //     return MaterialPageRoute(
+                //       builder: (context) => ShowJsonPage(),
+                //     );
+                //   },
+                // ),
                 Navigator(
-                  key: _ShowCard,
+                  key: _ExpTable,
                   onGenerateRoute: (RouteSettings settings) {
                     return MaterialPageRoute(
-                      builder: (context) => ShowCardPage(),
-                    );
-                  },
-                ),
-                Navigator(
-                  key: _ShowJson,
-                  onGenerateRoute: (RouteSettings settings) {
-                    return MaterialPageRoute(
-                      builder: (context) => ShowJsonPage(),
+                      builder: (context) => TableEventsExample(),
                     );
                   },
                 ),
