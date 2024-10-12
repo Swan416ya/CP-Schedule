@@ -68,6 +68,12 @@ dev_dependencies:
 
   unicons: ^2.0.0
 
+  cookie_jar: ^3.0.1
+
+  ffi: ^2.0.0
+
+  bitsdojo_window: ^0.1.6
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

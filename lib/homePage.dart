@@ -5,6 +5,7 @@ import 'package:cp_schedule/Parts/ContestCard.dart';
 import 'package:cp_schedule/Pages/ShowCard.dart';
 import 'package:cp_schedule/Pages/Setting.dart';
 import 'package:unicons/unicons.dart';
+import 'package:cp_schedule/Pages/ShowJson.dart';
 
 class homePage extends StatefulWidget {
   @override
@@ -19,6 +20,7 @@ class _homePageState extends State<homePage> {
   final _Settings = GlobalKey<NavigatorState>();
   final _About = GlobalKey<NavigatorState>();
   final _ShowCard = GlobalKey<NavigatorState>();
+  final _ShowJson = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +64,11 @@ class _homePageState extends State<homePage> {
                 selectedIcon: Icon(UniconsLine.card_atm),
                 label: Text('Card'),
               ),
+              NavigationRailDestination(
+                icon: Icon(Icons.web),
+                selectedIcon: Icon(Icons.web),
+                label: Text('Json'),
+              ),
             ],
           ),
           //主体部分
@@ -89,7 +96,7 @@ class _homePageState extends State<homePage> {
                   key: _Settings,
                   onGenerateRoute: (RouteSettings settings) {
                     return MaterialPageRoute(
-                      builder: (context) => settingPage(),
+                      builder: (context) => SettingPage(),
                     );
                   },
                 ),
@@ -108,7 +115,15 @@ class _homePageState extends State<homePage> {
                       builder: (context) => ShowCardPage(),
                     );
                   },
-                )
+                ),
+                Navigator(
+                  key: _ShowJson,
+                  onGenerateRoute: (RouteSettings settings) {
+                    return MaterialPageRoute(
+                      builder: (context) => ShowJsonPage(),
+                    );
+                  },
+                ),
               ],
             ),
           ),

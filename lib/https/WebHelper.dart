@@ -4,7 +4,7 @@ import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 
 class WebHelper {
   static late final Dio dio;
-  static late CookieManager cookieManager;
+  static late final CookieManager cookieManager;
   CancelToken _cancelToken = CancelToken();
 
   static final WebHelper _instance = WebHelper._internal();
@@ -22,7 +22,7 @@ class WebHelper {
     dio.interceptors.add(cookieManager);
   }
 
-  get(
+  Future<Response> get(
     String path, {
     Map<String, dynamic>? queryParameters,
     Options? options,
@@ -37,7 +37,7 @@ class WebHelper {
     return response;
   }
 
-  post(
+  Future<Response> post(
     String path, {
     Map<String, dynamic>? queryParameters,
     data,
@@ -54,7 +54,7 @@ class WebHelper {
     return response;
   }
 
-  download(urlPath, savePath) async {
+  Future<void> download(urlPath, savePath) async {
     Response response;
     response = await dio.download(urlPath, savePath,
         onReceiveProgress: (int count, int total) {});
