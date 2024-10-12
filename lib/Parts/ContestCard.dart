@@ -150,7 +150,7 @@ class ContestCard extends StatelessWidget {
         return 'assets/img/logo/Luogu.png';
       case 'vjudge.net':
         return 'assets/img/logo/vjudge.png';
-      case 'CodeChef.com':
+      case 'codechef.com':
         return 'assets/img/logo/CodeChef.png';
       default:
         return 'assets/img/logo/default.png';

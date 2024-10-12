@@ -45,19 +45,19 @@ class _SchedulePageState extends State<SchedulePage> {
       // Debugging: Print the fetched data
       print('Fetched data: $clist');
 
-      // int cnt=1;
+      int cnt = 1;
       for (var c in clist) {
         var contest = Contest(
           event: c['event'],
           resource: c['resource'],
-          startTime: DateTime.parse(c['start']).add(Duration(hours: 8)).toIso8601String(),
-          endTime: DateTime.parse(c['end']).add(Duration(hours: 8)).toIso8601String(),
-          duration: c['duration'],
+          startTime: _formatDateTime(c['start']),
+          endTime: _formatDateTime(c['end']),
+          duration: c['duration'].toString(),
           href: c['href'],
         );
         _contests.add(contest);
-        // print("Success adding contest: $cnt\n");
-        // cnt++;
+        print("Success adding contest: $cnt\n");
+        cnt++;
       }
 
       // Debugging: Print the contests list
@@ -69,6 +69,11 @@ class _SchedulePageState extends State<SchedulePage> {
         _isLoading = false;
       });
     }
+  }
+
+  String _formatDateTime(String dateTime) {
+    DateTime dt = DateTime.parse(dateTime).add(Duration(hours: 8));
+    return "${dt.toIso8601String().split('.').first}Z";
   }
 
   @override
@@ -88,7 +93,9 @@ class _SchedulePageState extends State<SchedulePage> {
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
           : _contests.isEmpty
-              ? Center(child: Text('No contests available\nTry add cookie in setting page and refresh'))
+              ? Center(
+                  child: Text(
+                      'No contests available\nTry add cookie in setting page and refresh'))
               : ListView.builder(
                   itemBuilder: (context, index) {
                     return ContestCard(

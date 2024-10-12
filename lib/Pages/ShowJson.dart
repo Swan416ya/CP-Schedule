@@ -23,8 +23,9 @@ class _ShowJsonPageState extends State<ShowJsonPage> {
   }
 
   void init() async {
-    try
-    {var data = await WebHelper().get(
+    // try
+    // {
+      var data = await WebHelper().get(
         'https://clist.by/api/v4/contest/',
         queryParameters: {
           'order_by': 'start',
@@ -36,13 +37,13 @@ class _ShowJsonPageState extends State<ShowJsonPage> {
         },
       );
     clist = data.data['objects'];
-    for (var c in clist) {
-      print(c);
-    }
-    setState(() {});}
-    catch(e){
-      print(e);
-    }
+    // for (var c in clist) {
+    //   print(c);
+    // }
+    // setState(() {});}
+    // catch(e){
+    //   print(e);
+    // }
   }
 
   @override
