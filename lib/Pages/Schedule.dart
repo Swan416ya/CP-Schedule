@@ -34,7 +34,7 @@ class _SchedulePageState extends State<SchedulePage> {
           'order_by': 'start',
           'upcoming': true,
           'limit': maxContestsCnt,
-          'start__gt': DateTime.now().toIso8601String(),
+          'start__gt': DateTime.now().subtract(Duration(hours: 8)).toIso8601String(),
           'filtered': true,
           'format_time': false,
         },

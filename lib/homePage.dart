@@ -21,9 +21,6 @@ class _homePageState extends State<homePage> {
   final _Schedule = GlobalKey<NavigatorState>();
   final _Settings = GlobalKey<NavigatorState>();
   final _About = GlobalKey<NavigatorState>();
-  // final _ShowCard = GlobalKey<NavigatorState>();
-  // final _ShowJson = GlobalKey<NavigatorState>();
-  // final _ExpTable = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
@@ -62,21 +59,6 @@ class _homePageState extends State<homePage> {
                 selectedIcon: Icon(Icons.info),
                 label: Text('About'),
               ),
-              // NavigationRailDestination(
-              //   icon: Icon(UniconsLine.card_atm),
-              //   selectedIcon: Icon(UniconsLine.card_atm),
-              //   label: Text('Card'),
-              // ),
-              // NavigationRailDestination(
-              //   icon: Icon(Icons.web),
-              //   selectedIcon: Icon(Icons.web),
-              //   label: Text('Json'),
-              // ),
-              // NavigationRailDestination(
-              //   icon: Icon(Icons.table_chart),
-              //   selectedIcon: Icon(Icons.table_chart),
-              //   label: Text('ExpTable'),
-              // ),
             ],
           ),
           //主体部分
@@ -116,35 +98,11 @@ class _homePageState extends State<homePage> {
                     );
                   },
                 ),
-                // Navigator(
-                //   key: _ShowCard,
-                //   onGenerateRoute: (RouteSettings settings) {
-                //     return MaterialPageRoute(
-                //       builder: (context) => ShowCardPage(),
-                //     );
-                //   },
-                // ),
-                // Navigator(
-                //   key: _ShowJson,
-                //   onGenerateRoute: (RouteSettings settings) {
-                //     return MaterialPageRoute(
-                //       builder: (context) => ShowJsonPage(),
-                //     );
-                //   },
-                // ),
-                // Navigator(
-                //   key: _ExpTable,
-                //   onGenerateRoute: (RouteSettings settings) {
-                //     return MaterialPageRoute(
-                //       builder: (context) => TableEventsExample(),
-                //     );
-                //   },
-                // ),
               ],
             ),
-          ),
-        ],
-      ),
+          )
+        ]
+      )
     );
   }
 }

@@ -22,6 +22,24 @@ class contestEvent{
 
   @override
   String toString() => title;
+
+  Map<String, dynamic> toJson() => {
+    'title': title,
+    'href': href,
+    'resource': resource,
+    'startTime': startTime,
+    'endTime': endTime,
+    'duration': duration
+  };
+
+  factory contestEvent.fromJson(Map<String, dynamic> json) => contestEvent(
+    title: json['title'],
+    href: json['href'],
+    resource: json['resource'],
+    startTime: json['startTime'],
+    endTime: json['endTime'],
+    duration: json['duration']
+  );
 }
 
 final kContests = LinkedHashMap<DateTime, List<contestEvent>>(

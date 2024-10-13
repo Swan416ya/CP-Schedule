@@ -6,6 +6,8 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:cp_schedule/Schedule_io/util.dart';
 import 'package:cp_schedule/Schedule_io/contestEvent.dart';
 import 'package:cp_schedule/Parts/EventsCard.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({Key? key}) : super(key: key);
@@ -24,12 +26,35 @@ class _CalendarPageState extends State<CalendarPage> {
   DateTime? _rangeStart;
   DateTime? _rangeEnd;
 
+  Future<void> _saveEvents() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final Map<String, List<String>> data = {};
+
+    kContests.forEach((key, value) {
+      data[key.toString()] = value.map((e) => json.encode(e.toJson())).toList();
+    });
+
+    await prefs.setString('events', json.encode(data));
+  }
+
+  // 从本地存储读取日程数据
+  Future<void> _loadEvents() async {
+    final prefs = await SharedPreferences.getInstance();
+    final eventsString = prefs.getString('events');
+    if (eventsString != null) {
+      final List<dynamic> eventsJson = jsonDecode(eventsString);
+      _selectedEvents.value =
+          eventsJson.map((json) => contestEvent.fromJson(json)).toList();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
 
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
+    _loadEvents();
   }
 
   @override
@@ -63,6 +88,7 @@ class _CalendarPageState extends State<CalendarPage> {
       });
 
       _selectedEvents.value = _getEventsForDay(selectedDay);
+      _saveEvents();
     }
   }
 
@@ -85,7 +111,14 @@ class _CalendarPageState extends State<CalendarPage> {
 
     if (start != null) {
       _selectedEvents.value = _getEventsForRange(start, end!);
+      _saveEvents();
     }
+  }
+
+  void _refreshEvents() {
+    setState(() {
+      _selectedEvents.value = _getEventsForDay(_selectedDay!);
+    });
   }
 
   @override
@@ -93,6 +126,12 @@ class _CalendarPageState extends State<CalendarPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Calendar'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.refresh),
+            onPressed: _refreshEvents,
+          ),
+        ],
       ),
       body: Column(
         children: <Widget>[
@@ -155,5 +194,5 @@ class _CalendarPageState extends State<CalendarPage> {
         ],
       ),
     );
-}
+  }
 }

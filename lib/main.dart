@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cp_schedule/homePage.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:cp_schedule/desktopWidget/overlayEntry.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: homePage(),
+      home: HomePageWithOverlay(),
     );
   }
 }
