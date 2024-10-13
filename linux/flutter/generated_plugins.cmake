@@ -4,6 +4,8 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   bitsdojo_window_linux
+  desktop_lifecycle
+  desktop_multi_window
   url_launcher_linux
 )
 

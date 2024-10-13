@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
     doWhenWindowReady(() {
       final initialSize = Size(900, 700);
       appWindow.minSize = Size(900, 500);
-      appWindow.size = initialSize;
+      appWindow.maxSize = Size.infinite;
       appWindow.alignment = Alignment.center;
       appWindow.show();
     });

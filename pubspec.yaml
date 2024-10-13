@@ -80,6 +80,10 @@ dev_dependencies:
 
   win32: ^5.5.0
 
+  desktop_multi_window: ^0.2.0
+
+  desktop_lifecycle: ^0.1.1
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
