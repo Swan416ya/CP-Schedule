@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:window_manager/window_manager.dart';
 import 'package:cp_schedule/main.dart';
 import 'package:cp_schedule/Schedule_io/contestEvent.dart';
 
 class desktopWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    doWhenWindowReady((){
+    windowManager.waitUntilReadyToShow().then((_) {
       final initialSize = Size(400, 600);
-      appWindow.minSize = initialSize;
-      appWindow.maxSize = initialSize;
-      appWindow.size = initialSize;
-      appWindow.alignment = Alignment.center;
-      appWindow.show();
+      windowManager.setMinimumSize(initialSize);
+      windowManager.setMaximumSize(initialSize);
+      windowManager.setSize(initialSize);
+      windowManager.setAlignment(Alignment.center);
+      windowManager.show();
     });
 
     return MaterialApp(
@@ -32,11 +32,13 @@ class contestToday extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.exit_to_app),
-          onPressed: () {
-            final initialSize = Size(900, 700);
-            appWindow.minSize = Size(900, 500);
-            appWindow.alignment = Alignment.center;
-            appWindow.show();
+            onPressed: () async {
+            // 设置窗口大小
+            await windowManager.setSize(Size(900, 700));
+            await windowManager.setMinimumSize(Size(900, 500));
+            await windowManager.setMaximumSize(Size.infinite);
+            await windowManager.setAlignment(Alignment.center);
+            // 返回到 MyApp
             runApp(MyApp());
           },
         ),
