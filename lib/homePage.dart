@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:cp_schedule/Pages/about.dart';
 import 'package:cp_schedule/Pages/Schedule.dart';
 import 'package:cp_schedule/Parts/ContestCard.dart';
-import 'package:cp_schedule/Pages/ShowCard.dart';
 import 'package:cp_schedule/Pages/Setting.dart';
 import 'package:unicons/unicons.dart';
 import 'package:cp_schedule/Pages/ShowJson.dart';
 import 'package:cp_schedule/Pages/calendarPage.dart';
 import 'package:cp_schedule/Pages/exampleCalendarPage.dart';
+import 'package:cp_schedule/Pages/EventsCardPage.dart';
 
 class homePage extends StatefulWidget {
   @override
@@ -21,7 +21,7 @@ class _homePageState extends State<homePage> {
   final _Schedule = GlobalKey<NavigatorState>();
   final _Settings = GlobalKey<NavigatorState>();
   final _About = GlobalKey<NavigatorState>();
-  // final _ShowCard = GlobalKey<NavigatorState>();
+  final _ShowCard = GlobalKey<NavigatorState>();
   // final _ShowJson = GlobalKey<NavigatorState>();
   final _ExpTable = GlobalKey<NavigatorState>();
 
@@ -62,11 +62,11 @@ class _homePageState extends State<homePage> {
                 selectedIcon: Icon(Icons.info),
                 label: Text('About'),
               ),
-              // NavigationRailDestination(
-              //   icon: Icon(UniconsLine.card_atm),
-              //   selectedIcon: Icon(UniconsLine.card_atm),
-              //   label: Text('Card'),
-              // ),
+              NavigationRailDestination(
+                icon: Icon(UniconsLine.card_atm),
+                selectedIcon: Icon(UniconsLine.card_atm),
+                label: Text('Card'),
+              ),
               // NavigationRailDestination(
               //   icon: Icon(Icons.web),
               //   selectedIcon: Icon(Icons.web),
@@ -116,14 +116,14 @@ class _homePageState extends State<homePage> {
                     );
                   },
                 ),
-                // Navigator(
-                //   key: _ShowCard,
-                //   onGenerateRoute: (RouteSettings settings) {
-                //     return MaterialPageRoute(
-                //       builder: (context) => ShowCardPage(),
-                //     );
-                //   },
-                // ),
+                Navigator(
+                  key: _ShowCard,
+                  onGenerateRoute: (RouteSettings settings) {
+                    return MaterialPageRoute(
+                      builder: (context) => ShowCardPage(),
+                    );
+                  },
+                ),
                 // Navigator(
                 //   key: _ShowJson,
                 //   onGenerateRoute: (RouteSettings settings) {

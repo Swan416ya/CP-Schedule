@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cp_schedule/Schedule_io/contestEvent.dart';
-import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class EventsCard extends StatelessWidget {
@@ -9,8 +8,7 @@ class EventsCard extends StatelessWidget {
   EventsCard({required this.event});
 
   @override
-  Widget build(BuildContext context)
-  {
+  Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         if (event.href != null) {
@@ -20,45 +18,26 @@ class EventsCard extends StatelessWidget {
       child: Card(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
             children: [
-              Row(
-                children: [
-                  Image.asset(
-                    getLogoPath(event.resource),
-                    width: 30,
-                    height: 30,
-                  ),
-                  ],
+              Image.asset(
+                getLogoPath(event.resource),
+                width: 30,
+                height: 30,
               ),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '${DateTime.parse(event.startTime).hour}:${DateTime.parse(event.startTime).minute.toString().padLeft(2, '0')}',
-                    style: TextStyle(fontSize: 16),
+              SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  event.title,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: StepProgressIndicator(
-                        totalSteps: Duration(minutes: int.parse(event.duration)).inMinutes,
-                        currentStep: DateTime.now().difference(DateTime.parse(event.startTime)).inMinutes,
-                        size: 8,
-                        padding: 0,
-                        selectedColor: Colors.blue,
-                        unselectedColor: Colors.grey[300]!,
-                        roundedEdges: Radius.circular(10),
-                      ),
-                    ),
-                  ),
-                  Text(
-                    '${DateTime.parse(event.endTime).hour}:${DateTime.parse(event.endTime).minute.toString().padLeft(2, '0')}',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ],
+                ),
+              ),
+              Text(
+                '${DateTime.parse(event.startTime).hour}:${DateTime.parse(event.startTime).minute.toString().padLeft(2, '0')}',
+                style: TextStyle(fontSize: 16),
               ),
             ],
           ),
