@@ -36,7 +36,7 @@ class EventsCard extends StatelessWidget {
                 ),
               ),
               Text(
-                '${DateTime.parse(event.startTime).hour}:${DateTime.parse(event.startTime).minute.toString().padLeft(2, '0')}',
+                '${DateTime.parse(event.startTime).toLocal().hour}:${DateTime.parse(event.startTime).toLocal().minute.toString().padLeft(2, '0')}',
                 style: TextStyle(fontSize: 16),
               ),
             ],

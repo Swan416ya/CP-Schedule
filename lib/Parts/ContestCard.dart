@@ -159,7 +159,7 @@ class _ContestCardState extends State<ContestCard> {
                                 title: widget.contest.event,
                                 href: widget.contest.href,
                                 resource: widget.contest.resource,
-                                startTime: widget.contest.startTime,
+                                startTime: DateTime.parse(widget.contest.startTime).subtract(Duration(hours: 8)).toIso8601String(),
                                 endTime: widget.contest.endTime,
                                 duration: widget.contest.duration,
                               ));
