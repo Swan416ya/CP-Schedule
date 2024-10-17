@@ -8,6 +8,7 @@ import 'package:cp_schedule/Pages/ShowJson.dart';
 import 'package:cp_schedule/Pages/calendarPage.dart';
 import 'package:cp_schedule/Pages/exampleCalendarPage.dart';
 import 'package:cp_schedule/Pages/EventsCardPage.dart';
+import 'package:cp_schedule/Pages/vjudgeDebug.dart';
 
 class homePage extends StatefulWidget {
   @override
@@ -21,6 +22,7 @@ class _homePageState extends State<homePage> {
   final _Schedule = GlobalKey<NavigatorState>();
   final _Settings = GlobalKey<NavigatorState>();
   final _About = GlobalKey<NavigatorState>();
+  final _vjudgeDebug = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +61,11 @@ class _homePageState extends State<homePage> {
                 selectedIcon: Icon(Icons.info),
                 label: Text('About'),
               ),
+              NavigationRailDestination(
+                icon: Icon(Icons.info),
+                selectedIcon: Icon(Icons.info),
+                label: Text('vjudgeDebug'),
+              )
             ],
           ),
           //主体部分
@@ -98,6 +105,14 @@ class _homePageState extends State<homePage> {
                     );
                   },
                 ),
+                Navigator(
+                  key: _vjudgeDebug,
+                  onGenerateRoute: (RouteSettings settings) {
+                    return MaterialPageRoute(
+                      builder: (context) => vjudgeDebug(),
+                    );
+                  },
+                )
               ],
             ),
           )
