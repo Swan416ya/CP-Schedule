@@ -22,43 +22,57 @@ class nowcoderGetter {
     // 打印整个HTML文档的内容
     print(document.outerHtml);
 
-    // 获取比赛标题
-    var titleElement = document.querySelector(
-        '.nk-container .acm-container .topic-banner-box .topic-banner h1 span');
-    if (titleElement == null) {
+    // 获取比赛标题和时间
+    var scriptElements = document.querySelectorAll('script');
+    String? title;
+    DateTime? startTime;
+    DateTime? endTime;
+    for (var script in scriptElements) {
+      if (script.text.contains('window.pageInfo')) {
+        RegExp titleRegExp = RegExp(r'"competitionName_var":"(.*?)"');
+        Match? titleMatch = titleRegExp.firstMatch(script.text);
+        if (titleMatch != null) {
+          title = titleMatch.group(1);
+        }
+
+        RegExp startTimeRegExp = RegExp(r'"startTime":(\d+)');
+        Match? startTimeMatch = startTimeRegExp.firstMatch(script.text);
+        if (startTimeMatch != null) {
+          startTime = DateTime.fromMillisecondsSinceEpoch(
+              int.parse(startTimeMatch.group(1)!));
+        }
+
+        RegExp endTimeRegExp = RegExp(r'"signUpEndTime":(\d+)');
+        Match? endTimeMatch = endTimeRegExp.firstMatch(script.text);
+        if (endTimeMatch != null) {
+          endTime = DateTime.fromMillisecondsSinceEpoch(
+              int.parse(endTimeMatch.group(1)!));
+        }
+        break;
+      }
+    }
+
+    if (title == null) {
       print('Title element not found');
       throw Exception('Title element not found');
     }
-    String title = titleElement.text;
     print('Title: $title');
 
-    // 获取比赛时间
-    var timeElement = document.querySelector('.match-time span');
-    if (timeElement == null) {
-      print('Time element not found');
-      throw Exception('Time element not found');
-    }
-    print('Time element text: ${timeElement.text}');
-
-    RegExp regExp = RegExp(
-        r'(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) 至 (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})');
-    Match? match = regExp.firstMatch(timeElement.text);
-
-    if (match == null) {
-      print('Time elements not found in text: ${timeElement.text}');
+    if (startTime == null || endTime == null) {
+      print('Time elements not found');
       throw Exception('Time elements not found');
     }
+    print('Start Time: $startTime');
+    print('End Time: $endTime');
 
-    DateTime beginTime = DateTime.parse(match.group(1)!);
-    DateTime endTime = DateTime.parse(match.group(2)!);
-    var duration = endTime.difference(beginTime).inSeconds;
+    var duration = endTime.difference(startTime).inSeconds;
 
     var event = contestEvent(
       title: title,
       href: url,
       resource: "ac.nowcoder.com",
       // 把纯数字改成toIso8601String()格式
-      startTime: beginTime.toIso8601String(),
+      startTime: startTime.toIso8601String(),
       endTime: endTime.toIso8601String(),
       duration: duration.toString(),
     );
