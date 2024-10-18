@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 class aboutPage extends StatefulWidget{
   @override
@@ -14,6 +15,7 @@ class _aboutPageState extends State<aboutPage>{
       throw 'Could not launch $url';
     }
   }
+
 
   @override
   Widget build(BuildContext context){
@@ -33,24 +35,31 @@ class _aboutPageState extends State<aboutPage>{
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text('Version: 1.0.0'),
+            Text('Version: 1.0.1'),
             Text('Author: Swan416ya'),
-            //加入一个链接到github项目链接的按钮
-            ElevatedButton(
-              onPressed: () {
-                launchURL('https://github.com/Swan416ya/CP-Schedule');
-              },
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  //使用github图标
-                  Image.network('https://github.githubassets.com/assets/gh-desktop-7c9388a38509.png', width: 20),
-                  SizedBox(width: 5),
-                  Text('Github Repository'),
-                ],
-              )
-            ),
-          ],
+            Expanded(
+              child: FutureBuilder(
+                future: DefaultAssetBundle.of(context).loadString('assets/about.md'),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    return Markdown(
+                      styleSheet: MarkdownStyleSheet(
+                        p: TextStyle(fontSize: 18.0),
+                      ),
+                      data: snapshot.data ?? '',
+                      onTapLink: (text, href, title) {
+                        if (href != null) {
+                          launchURL(href);
+                        }
+                      },
+                    );
+                  } else {
+                    return CircularProgressIndicator();
+                  }
+                },
+              ),
+            )
+          ]
         ),
       ),
     );
