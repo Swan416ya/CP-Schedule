@@ -1,6 +1,7 @@
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:path_provider/path_provider.dart';
 
 class WebHelper {
   static late final Dio dio;
@@ -16,7 +17,9 @@ class WebHelper {
       sendTimeout: const Duration(seconds: 30).inMilliseconds,
     );
     dio = Dio(options);
-    var cookiePath = 'cookies';
+  }
+
+  static Future<void> initialize(String cookiePath) async {
     cookieManager =
         CookieManager(PersistCookieJar(storage: FileStorage(cookiePath)));
     dio.interceptors.add(cookieManager);
