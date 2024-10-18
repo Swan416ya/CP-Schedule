@@ -62,8 +62,6 @@ dev_dependencies:
 
   shared_preferences: ^2.0.6
 
-  provider: ^5.0.0
-
   path_provider: ^2.0.11
 
   unicons: ^2.0.0
@@ -89,6 +87,12 @@ dev_dependencies:
   html: ^0.15.0
 
   flutter_markdown: ^0.7.4
+
+  omni_datetime_picker: ^2.0.5
+
+  provider: ^6.1.2
+
+  flutter_bloc: ^8.1.6
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

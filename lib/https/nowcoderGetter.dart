@@ -20,7 +20,7 @@ class nowcoderGetter {
     print('Document parsed successfully');
 
     // 打印整个HTML文档的内容
-    print(document.outerHtml);
+    // print(document.outerHtml);
 
     // 获取比赛标题和时间
     var scriptElements = document.querySelectorAll('script');
@@ -62,8 +62,8 @@ class nowcoderGetter {
       print('Time elements not found');
       throw Exception('Time elements not found');
     }
-    print('Start Time: $startTime');
-    print('End Time: $endTime');
+    // print('Start Time: $startTime');
+    // print('End Time: $endTime');
 
     var duration = endTime.difference(startTime).inSeconds;
 

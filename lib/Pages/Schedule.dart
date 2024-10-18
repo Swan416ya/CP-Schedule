@@ -5,6 +5,8 @@ import 'package:cp_schedule/https/WebHelper.dart';
 import 'package:cp_schedule/https/vjudgeGetter.dart';
 import 'package:cp_schedule/https/nowcoderGetter.dart';
 import 'package:cp_schedule/Schedule_io/contestEvent.dart';
+import 'package:omni_datetime_picker/omni_datetime_picker.dart';
+import 'package:cp_schedule/https/CodeforcesGetter.dart';
 
 class SchedulePage extends StatefulWidget {
   const SchedulePage({Key? key}) : super(key: key);
@@ -114,13 +116,22 @@ class _SchedulePageState extends State<SchedulePage> {
                     {
                       vjudgeGetter getter = vjudgeGetter(url);
                       event = await getter.getEvent();
+                      addContest(event);
                     }
                     else if(url.contains('ac.nowcoder.com'))
                     {
                       nowcoderGetter getter = nowcoderGetter(url);
                       event = await getter.getEvent();
+                      addContest(event);
                     }
-                    addContest(event);
+                    else
+                    {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('This platform is not supported yet.'),
+                        ),
+                        );
+                    }
                   } catch (e) {
                     print('Error adding custom contest: $e');
                   } finally {
@@ -144,12 +155,111 @@ class _SchedulePageState extends State<SchedulePage> {
     );
   }
 
+  void _showAddVPDialog()
+  {
+    TextEditingController urlController = TextEditingController();
+    DateTime? startDateTime;
+    DateTime? endDateTime;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+      return AlertDialog(
+        title: Text('Add a virtual participation schedule'),
+        content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+          controller: urlController,
+          decoration: InputDecoration(hintText: 'Please input contest URL'),
+          ),
+          SizedBox(height: 10),
+          ElevatedButton(
+          onPressed: () async {
+            startDateTime = await showOmniDateTimePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(2000),
+            lastDate: DateTime(2100),
+            );
+          },
+          child: Text('Select Start Time'),
+          ),
+        ],
+        ),
+        actions: [
+        TextButton(
+          onPressed: () async {
+          Navigator.of(context).pop();
+          String url = urlController.text;
+          if (url.isNotEmpty && startDateTime != null) {
+            setState(() {
+            _isLoading = true;
+            });
+            try {
+            contestEvent event = contestEvent(
+              title: 'Custom Contest',
+              href: url,
+              resource: 'Custom',
+              startTime: startDateTime!.toIso8601String(),
+              endTime: '',
+              duration: '',
+            );
+            if(url.contains('codeforces.com'))
+            {
+              codeforcesGetter getter = codeforcesGetter(url);
+              event = await getter.getEvent();
+              addContest(contestEvent(
+                title:event.title+'(VP)',
+                href:url,
+                startTime:startDateTime!.toIso8601String(),
+                duration:event.duration,
+                endTime: startDateTime!.add(Duration(seconds: int.parse(event.duration))).toIso8601String(),
+                resource:"codeforces.com",
+              ));
+            }
+            else {
+              ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('This platform is not supported yet.'),
+              ),
+              );
+            }
+            } catch (e) {
+            print('Error adding custom contest: $e');
+            } finally {
+            setState(() {
+              _isLoading = false;
+            });
+            }
+          }
+          },
+          child: Text('Add'),
+        ),
+        TextButton(
+          onPressed: () {
+          Navigator.of(context).pop();
+          },
+          child: Text('Cancel'),
+        ),
+        ],
+      );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Schedule'),
         actions: [
+          IconButton(
+            icon: Text('VP'),
+            onPressed: () {
+              _showAddVPDialog();
+            },
+          ),
           IconButton(
             icon: Icon(Icons.add),
             onPressed: () {
