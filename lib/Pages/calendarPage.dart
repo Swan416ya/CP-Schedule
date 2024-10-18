@@ -31,7 +31,8 @@ class _CalendarPageState extends State<CalendarPage> {
     final Map<String, List<String>> data = {};
 
     kContests.forEach((key, value) {
-      data[key.toString()] = value.map((e) => json.encode(e.toJson())).toList();
+      data[key.toIso8601String()] =
+          value.map((e) => json.encode(e.toJson())).toList();
     });
 
     await prefs.setString('events', json.encode(data));
@@ -42,10 +43,18 @@ class _CalendarPageState extends State<CalendarPage> {
     final prefs = await SharedPreferences.getInstance();
     final eventsString = prefs.getString('events');
     if (eventsString != null) {
-      final List<dynamic> eventsJson = jsonDecode(eventsString);
-      _selectedEvents.value =
-          eventsJson.map((json) => contestEvent.fromJson(json)).toList();
+      final Map<String, dynamic> eventsJson = jsonDecode(eventsString);
+      eventsJson.forEach((key, value) {
+        final contestDate = DateTime.parse(key).toLocal();
+        final contestsList = (value as List)
+            .map((e) => contestEvent.fromJson(jsonDecode(e)))
+            .toList();
+        kContests[contestDate] = contestsList;
+      });
     }
+    setState(() {
+      _selectedEvents.value = _getEventsForDay(_selectedDay!);
+    });
   }
 
   @override
@@ -121,6 +130,16 @@ class _CalendarPageState extends State<CalendarPage> {
     });
   }
 
+  void _deleteEvent(contestEvent event) {
+    final contestDate = DateTime.parse(event.startTime).toLocal();
+    kContests[contestDate]?.remove(event);
+    if (kContests[contestDate]?.isEmpty ?? false) {
+      kContests.remove(contestDate);
+    }
+    _saveEvents();
+    _refreshEvents();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -185,7 +204,28 @@ class _CalendarPageState extends State<CalendarPage> {
                 return ListView.builder(
                   itemCount: value.length,
                   itemBuilder: (context, index) {
-                    return EventsCard(event: value[index]);
+                    return GestureDetector(
+                      onSecondaryTapDown: (details) {
+                        showMenu(
+                          context: context,
+                          position: RelativeRect.fromLTRB(
+                            details.globalPosition.dx,
+                            details.globalPosition.dy,
+                            details.globalPosition.dx,
+                            details.globalPosition.dy,
+                          ),
+                          items: [
+                            PopupMenuItem(
+                              child: Text('Delete'),
+                              onTap: () {
+                                _deleteEvent(value[index]);
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                      child: EventsCard(event: value[index]),
+                    );
                   },
                 );
               },
