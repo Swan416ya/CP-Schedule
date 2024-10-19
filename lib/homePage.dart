@@ -80,7 +80,7 @@ class _homePageState extends State<homePage> {
               key: _Settings,
               onGenerateRoute: (RouteSettings settings) {
                 return MaterialPageRoute(
-                  builder: (context) => SettingPage(),
+                  builder: (context) => Setting(),
                 );
               },
             ),

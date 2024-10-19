@@ -255,7 +255,14 @@ class _SchedulePageState extends State<SchedulePage> {
         title: Text('Schedule'),
         actions: [
           IconButton(
-            icon: Text('VP'),
+            icon: Text(
+              'VP',
+                style: TextStyle(
+                fontFamily: 'Roboto',
+                fontWeight: FontWeight.bold,
+                color: Color.fromARGB(255, 73, 69, 79),
+                ),
+              ),
             onPressed: () {
               _showAddVPDialog();
             },
